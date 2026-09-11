@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 2,
+  "project": "EscalaClara",
+  "northStar": "An architectural studio cover sheet with pale stone paper, navy rules and one rust-red pencil annotation.",
+  "palette": {"ink":"#10283b","muted":"#5a6871","stone":"#eeeae0","paper":"#f9f7f1","rust":"#e05f3f","ice":"#d9e9e5"},
+  "typography": {"display":"Segoe UI Variable / Aptos, weight 300","body":"Segoe UI Variable / Aptos","labels":"Cascadia Mono / Consolas"},
+  "geometry": {"corners":"square","borders":"thin navy rules","depth":"flat drafting sheets"},
+  "motion": {"buttonLift":"150ms","reducedMotion":true},
+  "breakpoints":[840,560],
+  "components":["diagonal-scale-logo","vertical-ratio-hero","stepped-drawing-cards","technical-form","dark-result-sheet"]
+}
