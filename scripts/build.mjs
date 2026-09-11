@@ -6,9 +6,34 @@ import { renderPage } from '../src/templates/site.mjs';
 import { site } from '../site.config.mjs';
 import { applyAnalyticsConsent } from './analytics-consent.mjs';
 import { applyShareableCalculations } from './shareable-calculations.mjs';
+import { applyCalculationExplanations } from './calculation-explanations.mjs';
 
 const verificationTag = '<meta name="google-site-verification" content="EwTiLP4eMZK5K7W9U_5tpM7cvJsn4ZaLvRwKYrmuuV0">';
 const shareableForms = ['convert-form', 'find-form', 'rescale-form'];
+const explanations = {
+  'convert-form': {
+    formula: 'plano → real: medida real = medida del plano × denominador de escala; real → plano: medida del plano = medida real ÷ denominador',
+    formulaSwitch: {
+      field: 'direction',
+      values: {
+        drawing: 'medida real = medida del dibujo × denominador de la escala, después de convertir ambas magnitudes a la misma unidad',
+        real: 'medida del dibujo = medida real ÷ denominador de la escala, después de convertir ambas magnitudes a la misma unidad'
+      }
+    },
+    fields: [['length', 'Medida de entrada'], ['ratio', 'Denominador de escala']],
+    note: 'Internamente las unidades se convierten a milímetros antes de aplicar la escala y después se convierten a la unidad de salida.'
+  },
+  'find-form': {
+    formula: 'denominador de escala = medida real ÷ medida del dibujo, usando primero la misma unidad para ambas',
+    fields: [['drawingLength', 'Medida en el dibujo'], ['realLength', 'Medida real']],
+    note: 'La escala estándar mostrada es la de la lista incorporada cuya distancia al resultado calculado es menor.'
+  },
+  'rescale-form': {
+    formula: 'factor = escala actual ÷ escala objetivo; porcentaje de impresión = factor × 100; nueva medida = medida actual × factor',
+    fields: [['currentRatio', 'Escala actual (1:n)'], ['targetRatio', 'Escala objetivo (1:n)'], ['measuredLength', 'Medida actual', 'cm']],
+    note: 'Un porcentaje mayor de 100 % amplía la impresión; uno menor de 100 % la reduce.'
+  }
+};
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 await rm(dist, { recursive: true, force: true });
@@ -25,6 +50,7 @@ for (const page of pages) {
     storageKey: 'ec:v1:analytics-consent'
   });
   html = applyShareableCalculations(html, shareableForms);
+  html = applyCalculationExplanations(html, explanations);
   if (page.path === '') html = html.replace('<head>', `<head>\n  ${verificationTag}`);
   await writeFile(destination, html, 'utf8');
 }
